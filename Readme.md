@@ -65,12 +65,12 @@ Producer -> Broker -> Topic -> Consumer
 ---
 # Roadmap
 
-## V1 - Basic pub/sub (current goal)
-- [ ] Create broker structure
-- [ ] Implement producer
-- [ ] Implement Subscribe
-- [ ] Basic fan-out (1 message -> n consumer)
-- [ ] Use channels for communication
+## V1 - Basic pub/sub
+- [x] Create broker structure
+- [x] Implement producer
+- [x] Implement Subscribe
+- [x] Basic fan-out (1 message -> n consumer)
+- [x] Use channels for communication
 
 ## V2 - Concurrency Safety
 - [ ] Protect shared state (topic map)

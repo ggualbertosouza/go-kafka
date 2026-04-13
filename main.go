@@ -3,52 +3,12 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"github.com/ggualbertosouza/go-kafka/pubsub"
 )
 
-type Message struct {
-	Payload any
-}
-
-type Topic struct {
-	subscribers []chan Message
-}
-
-type Broker struct {
-	topics map[string]*Topic
-}
-
-func NewBroker() *Broker {
-	return &Broker{
-		topics: make(map[string]*Topic),
-	}
-}
-
-func (b *Broker) Subscribe(topicName string) <-chan Message {
-	topic, exists := b.topics[topicName]
-	if !exists {
-		topic = &Topic{}
-		b.topics[topicName] = topic
-	}
-
-	ch := make(chan Message)
-	topic.subscribers = append(topic.subscribers, ch)
-
-	return ch
-}
-
-func (b *Broker) Publish(topicName string, msg Message) {
-	topic, exists := b.topics[topicName]
-	if !exists {
-		return
-	}
-
-	for _, sub := range topic.subscribers {
-		sub <- msg
-	}
-}
-
 func main() {
-	broker := NewBroker()
+	broker := pubsub.NewBroker()
 
 	ch1 := broker.Subscribe("orders")
 	go func() {
@@ -66,7 +26,7 @@ func main() {
 
 	go func() {
 		for i := 0; i < 5; i++ {
-			msg := Message{Payload: fmt.Sprintf("Order %d", i)}
+			msg := pubsub.Message{Payload: fmt.Sprintf("Order %d", i)}
 			broker.Publish("orders", msg)
 			time.Sleep(500 * time.Millisecond)
 		}
