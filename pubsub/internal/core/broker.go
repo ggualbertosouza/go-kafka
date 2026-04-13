@@ -11,10 +11,7 @@ func NewBroker() *Broker {
 }
 
 func (b *Broker) Publish(topicName string, msg Message) {
-	topic, exists := b.topics[topicName]
-	if !exists {
-		return
-	}
+	topic := b.getOrCreateTopic(topicName)
 
 	for _, sub := range topic.subscribers {
 		sub <- msg
